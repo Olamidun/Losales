@@ -1,0 +1,12 @@
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <!-- <p>First name: {{form.first_name}}</p>
+    <p>Last name: {{form.last_name}}</p>
+    <p>Email Address: {{form.email}}</p>
+    <p>Password: {{form.password1}}</p>
+    <p>confrim password: {{form.password2}}</p> -->
+    <button type="submit">register</button>
+</form>
+
+
