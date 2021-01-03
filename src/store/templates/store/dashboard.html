@@ -1,0 +1,9 @@
+{% for store in stores %}
+    <p>{{request.user}}</p>
+{% endfor %}
+{% for product in products %}
+    <p>{{product.name_of_product}}</p>
+    <p>{{product.price}}</p>
+{% endfor %}
+
+{{number_of_stores}}
