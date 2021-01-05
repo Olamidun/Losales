@@ -34,18 +34,22 @@ def create_store(request):
             name = form.cleaned_data['name']
             description = form.cleaned_data['description']
             country = form.cleaned_data['country']
-            store = Store.objects.create(owner=request.user, name=name, description=description, country=country)
-        return redirect('store:pay-for-store')
+            twitter_handle = form.cleaned_data['twitter_handle']
+            instagram_handle = form.cleaned_data['instagram_handle']
+            store = Store.objects.create(owner=request.user, name=name, description=description, country=country, twitter_handle=twitter_handle, instagram_handle=instagram_handle)
+            return redirect('store:pay-for-store', slug=store.slug)
+        else:
+            return render(request, "store/create_store.html", {'form': form})
     else:
         form = StoreForm()
     return render(request, 'store/create_store.html', {'form': form})
 
 
 @login_required
-def pay_for_store(request):
+def pay_for_store(request, slug):
     base_url = 'https://api.flutterwave.com/v3/payments'
 
-    store = Store.objects.get(owner=request.user, is_approved=False)
+    store = Store.objects.get(owner=request.user, slug=slug, is_approved=False)
     print(store)
     rand = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(16)])
 
@@ -57,7 +61,7 @@ def pay_for_store(request):
         "tx_ref": tx_ref,
         "amount": "100",
         "currency": "NGN",
-        "redirect_url": "http://localhost.com/store/dashboard",
+        "redirect_url": f"http://localhost.com/store/confirm_payment/{store.slug}",
         "payment_options": "card",
         "customer":{
             "email": f"{store.owner.email}",
@@ -72,6 +76,7 @@ def pay_for_store(request):
 
     store.reference = tx_ref
     store.save()
+    print(store.slug)
 
     response = requests.post(base_url, json=payload, headers=headers)
     results = response.json()
@@ -80,27 +85,44 @@ def pay_for_store(request):
     return redirect(redirect_link)
 
 @login_required
-def confirm_payment(request):
-    # https://www.google.com/?status=successful&tx_ref=hhyDkx2FnGTZJOo5&transaction_id=1809806
-    # http://localhost.com/store/dashboard?status=successful&tx_ref=uWgg6zkUWTnXx3JW&transaction_id=1809860
+def confirm_payment(request, slug):
+    store = Store.objects.get(slug=slug)
 
-    # transaction_id = request.GET.get('transaction_id')
+    transaction_id = request.GET.get('transaction_id')
+    print(transaction_id)
 
 
-    # headers = {"Content-Type": 'application/json', 'Authorization': f"Bearer {secret_key}"}
+# 5531 8866 5214 2950
 
-    # base_url = f'https://api.flutterwave.com/v3/transactions/{headers}/verify'
+# 564
 
-    # response = requests.get(base_url, headers)
-    # results = response.json()
-    # print(transaction_id)
-    # return HttpResponse(results)
-    pass
+# 09/32
+# 3310
+# 12345
+    headers = {"Content-Type": 'application/json', 'Authorization': f"Bearer {secret_key}"}
+
+    base_url = f'https://api.flutterwave.com/v3/transactions/{transaction_id}/verify'
+
+    response = requests.get(base_url, headers=headers)
+    results = response.json()
+    print(results)
+
+    # store.reference ==  and
+    if results['data']['tx_ref'] == store.reference and  results['status'] == "success" and results['data']['charged_amount'] == 100:
+        store.is_approved = True
+        # store.dispatch_rider = 'Kolapo Opeoluwa'
+        store.save()
+        return HttpResponse(results)
+    else:
+        return HttpResponse('Your payment was not successful, hence your store has not been approved, initiate payment again')
+        print(transaction_id)
+        
+        
 
 @login_required
-def add_product_to_store(request, name):
+def add_product_to_store(request, slug):
     try:
-        store = Store.objects.get(name=name, owner=request.user)
+        store = Store.objects.get(slug=slug, owner=request.user)
     except Store.DoesNotExist:
         return HttpResponse('Store not found')
     if store.is_approved == True:
@@ -111,7 +133,7 @@ def add_product_to_store(request, name):
                 price = form.cleaned_data['price']
                 description = form.cleaned_data['product_description']
                 product = Product.objects.create(name_of_product=name, price=price, product_description=description, store=store)
-            return redirect('store:dashboard', first_name=request.user.first_name, last_name=request.user.last_name)
+            return redirect('store:dashboard', slug=store.slug)
         else:
             form = ProductForm()
     else:
