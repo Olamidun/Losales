@@ -18,7 +18,7 @@ class Store(models.Model):
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.owner.first_name} {self.owner.last_name}'s Store"
+        return self.name
 
     
     def save(self, *args, **kwargs):
@@ -30,10 +30,20 @@ class Store(models.Model):
 class Product(models.Model):
     name_of_product = models.CharField(max_length=200)
     product_description = models.TextField()
+    image = models.ImageField(upload_to="images", null=True, blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=8)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    # shipping = models.BooleanField(default=False)
     shipping_fee = models.DecimalField(decimal_places=2, max_digits=5, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name_of_product} in {self.store.owner.first_name} {self.store.owner.last_name}'s Store"
+        return f"{self.name_of_product} in {self.store.name}"
+
+@property
+def image_url(self):
+    try:
+        url = self.image.url
+    except:
+        url = ''
+    return url
 

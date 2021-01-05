@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account
+from .models import Account, Customer
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
@@ -32,3 +32,4 @@ class AccountAdmin(UserAdmin):
     ordering = ('email', )
 
 admin.site.register(Account, AccountAdmin)
+admin.site.register(Customer)
