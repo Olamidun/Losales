@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}"> -->
+    <title>cart</title>
+</head>
+<body>
+
+    {% for item in items %}
+        <p>{{item.product.name_of_product}}</p>
+        <p>{{item.product.price}}</p>
+        <p>{{item.quantity}}</p>
+        <img src="{{item.product.image_url}}" alt="">
+    {% endfor %}
+
+    <br><br>
+    <p>Cart count: {{cart_count}}</p>
+    <p>Items: {{order.get_order_items}}</p>
+    <p>Total: {{order.get_order_total}}</p>
+
+
+        <!-- To be added to base.html file when created -->
+    <script type="text/javascript" src="{% static 'cart/js/cart.js' %}"></script>
+    
+</body>
+</html>
+<body>
+    
+
+

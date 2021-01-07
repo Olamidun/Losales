@@ -24,7 +24,7 @@ urlpatterns = [
     path('register/', account_view.register, name='register'),
     path('', include('django.contrib.auth.urls')), 
     path('store/', include('store.urls')),
-    # path('cart/', include('cart.urls'))
+    path('cart/', include('cart.urls'))
 
 ]
 

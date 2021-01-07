@@ -4,6 +4,7 @@
 {% for product in products %}
     <p>{{product.name_of_product}}</p>
     <p>{{product.price}}</p>
+    <img src="{{product.image_url}}" alt="">
 {% endfor %}
 
 {{number_of_stores}}

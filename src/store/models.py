@@ -39,11 +39,13 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name_of_product} in {self.store.name}"
 
-@property
-def image_url(self):
-    try:
-        url = self.image.url
-    except:
-        url = ''
-    return url
+    @property
+    def image_url(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+
+        print(url)
 

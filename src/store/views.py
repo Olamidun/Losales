@@ -17,14 +17,23 @@ public_key = 'FLWPUBK_TEST-aaab004122d871bc5c7ea7ade0048fd9-X'
 secret_key = 'FLWSECK_TEST-6780cf75dc1d85b632abee0f01420b9a-X'
 
 @login_required
-def dashboard_view(request, first_name, last_name):
-    user = Account.objects.get(first_name=first_name, last_name=last_name)
+def dashboard_view(request, slug):
     
-    store = Store.objects.get(owner=user) #This is going to be r
+    store = Store.objects.get(slug=slug, owner=request.user) #This is going to be r
     stores = Store.objects.filter(owner=request.user)
     products = Product.objects.filter(store=store).all()
     number_of_stores = stores.count()
     return render(request, 'store/dashboard.html', {'store': store, 'products': products, "number_of_stores": number_of_stores})
+
+
+def store(request, slug):
+    store = Store.objects.get(slug=slug)
+    products = Product.objects.filter(store=store).all()
+    context = {
+        "products":products,
+        "store": store
+    }
+    return render(request, 'store/store.html', context)
 
 @login_required
 def create_store(request):
