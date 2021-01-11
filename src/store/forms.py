@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 class StoreForm(forms.ModelForm):
     class Meta:
         model = Store
-        fields = ('name', 'description', 'country', 'twitter_handle', 'instagram_handle')
+        fields = ('name', 'description', 'country', 'twitter_handle', 'instagram_handle', )
 
         # def clean(self):
 

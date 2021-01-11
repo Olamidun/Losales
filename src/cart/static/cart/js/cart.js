@@ -2,20 +2,50 @@
 
 var updateButtons = document.getElementsByClassName('update-cart')
 
-for( var i = 0;i<=updateButtons.length; i++){
-    updateButtons[i].addEventListener('click', function(){
-        const productId = this.dataset.product
-        const action = this.dataset.action
+for( var i = 0; i<=updateButtons.length; i++){
+    updateButtons[i].addEventListener('click', function(e){
+        e.preventDefault()
+        let productId = this.dataset.product
+        let action = this.dataset.action
+    
         console.log('ProductId: ', productId, 'Action: ', action)
 
-        if (user === 'AnonymousUser'){
-            console.log('User is not logged in')
+        if (user == 'AnonymousUser'){
+            addCookieItem(productId, action)
         } else{
             updateBuyerOrder(productId, action)
         }
         
     })
 }
+
+
+function addCookieItem(productId, action){
+	// console.log('User is not authenticated')
+
+	if (action == 'add'){
+		if (cart[productId] == undefined){
+		cart[productId] = {'quantity':1}
+
+		}else{
+			cart[productId]['quantity'] += 1
+		}
+	}
+
+	if (action == 'remove'){
+		cart[productId]['quantity'] -= 1
+
+		if (cart[productId]['quantity'] <= 0){
+			console.log('Item should be deleted')
+			delete cart[productId];
+		}
+	}
+	console.log('CART:', cart)
+	document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+	
+	location.reload()
+}
+
 
 function updateBuyerOrder(productId, action){
     let url = '/cart/update_item'
@@ -31,6 +61,8 @@ function updateBuyerOrder(productId, action){
         return response.json()
     }).then((data) =>{
         console.log('data:', data)
+        console.log(csrftoken)
         location.reload()
     })
 }
+

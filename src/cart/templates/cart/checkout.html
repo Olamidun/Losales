@@ -3,10 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>cart</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}"> -->
-    <!-- Also to be transferred to base.html file when created -->
+    <title>cart</title>
+
+    <!-- If this same script in store.html has been moved to base.html, this one will be deleted -->
     <script type="text/javascript">
         let user = '{{request.user}}'
 
@@ -29,7 +30,7 @@
 
         function getCookie(name) {
 		    // Split cookie string and get all individual name=value pairs in an array
-		    let cookieArr = document.cookie.split(";");
+		    var cookieArr = document.cookie.split(";");
 
 		    // Loop through the array elements
 		    for(let i = 0; i < cookieArr.length; i++) {
@@ -56,23 +57,54 @@
 		console.log('Cart:', cart)
 
     </script>
-        
-    </script>
 </head>
 <body>
-    <p>{{store.owner.first_name}}</p>
 
-    {% for product in products %}
-        <p>{{product.name_of_product}}</p>
-        <p>{{product.price}}</p>
-        <img src="{{product.image_url}}" alt="">
-        <button data-product={{product.pk}} data-action="add" class="btn btn-outline add-btn update-cart">Add to cart</button>
-
-        <!-- <button data-product={{product.pk}} data-action="remove" class="btn btn-outline add-btn update-cart">decrease quantity</button> -->
+    {% for item in items %}
+        <p>{{item.product.name_of_product}}</p>
+        <p>{{item.product.price}}</p>
+        <p>{{item.quantity}}</p>
+        <img src="{{item.product.image_url}}" alt="">
+        
     {% endfor %}
 
+    <br><br>
+    <p>Cart count: {{cart_count}}</p>
+    <p>Items: {{order.get_order_items}}</p>
+    <p>Total: {{order.get_order_total}}</p>
+
+
+    <form method="POST" id="form">
+        {% csrf_token %}
+        <div>
+            <input required type="text" name="name" placeholder="Name">
+            <input required type="email" name="email" placeholder="Email Address">
+        </div>
+        
+        <div>
+            <input required type="text" name="adress" placeholder="address">
+            <input required type="text" name="city" placeholder="City">
+            <input required type="text" name="state" placeholder="State">
+            <input required type="text" name="country" placeholder="Country">
+            <button type="submit" id="submit-button">Submit</button>
+        </div>
+        
+    </form>
+
+
         <!-- To be added to base.html file when created -->
-        <script type="text/javascript" src="{% static 'cart/js/cart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'cart/js/cart.js' %}"></script>
+
+    <script type="text/javascript">
+        document.getElementById('form').addEventListener('submit', function(e){
+            e.preventDefault()
+            submitForm()
+        })
+
+        function submitForm(){
+            console.log('form submitted')
+        }
+    </script>
     
 </body>
 </html>

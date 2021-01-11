@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render, HttpResponse
 from .forms import StoreForm, ProductForm
 from accounts.models import Account
 from .models import Store, Product
+from cart.models import Order
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
@@ -19,11 +20,12 @@ secret_key = 'FLWSECK_TEST-6780cf75dc1d85b632abee0f01420b9a-X'
 @login_required
 def dashboard_view(request, slug):
     
-    store = Store.objects.get(slug=slug, owner=request.user) #This is going to be r
-    stores = Store.objects.filter(owner=request.user)
+    store = Store.objects.get(slug=slug, owner=request.user) 
+    #This is going to be r
+    orders = Order.objects.filter(store=store).all()
+    print(orders)
     products = Product.objects.filter(store=store).all()
-    number_of_stores = stores.count()
-    return render(request, 'store/dashboard.html', {'store': store, 'products': products, "number_of_stores": number_of_stores})
+    return render(request, 'store/dashboard.html', {'store': store, 'products': products, "orders": orders})
 
 
 def store(request, slug):
@@ -45,6 +47,7 @@ def create_store(request):
             country = form.cleaned_data['country']
             twitter_handle = form.cleaned_data['twitter_handle']
             instagram_handle = form.cleaned_data['instagram_handle']
+    
             store = Store.objects.create(owner=request.user, name=name, description=description, country=country, twitter_handle=twitter_handle, instagram_handle=instagram_handle)
             return redirect('store:pay-for-store', slug=store.slug)
         else:

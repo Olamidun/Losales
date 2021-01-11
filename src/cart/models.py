@@ -29,6 +29,13 @@ class Order(models.Model):
         total = sum([item.quantity  for item in order_items])
         return total
 
+
+    @property
+    def check_if_order_is_complete(self):
+        if self.complete == False:
+            return False
+        return True
+
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
@@ -53,6 +60,7 @@ class ShippingAddress(models.Model):
     state = models.CharField(max_length=16, null=False)
     country = models.CharField(max_length=16, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
+    is_billing_address = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address

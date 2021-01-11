@@ -7,4 +7,18 @@
     <img src="{{product.image_url}}" alt="">
 {% endfor %}
 
+<p>Orders: </p>
+{% for order in orders %}
+
+    <p>{{order.customer}}'s order</p>
+    {% for item in order.orderitem_set.all %}
+        <p>{{item.product.name_of_product}} || {{item.quantity}}</p> 
+        
+    {% endfor %}
+    <p>{{order.get_order_total}}</p>
+    <p>{{order.check_if_order_is_complete}}</p>
+    
+    <!-- <p></p> -->
+{% endfor%}
+
 {{number_of_stores}}

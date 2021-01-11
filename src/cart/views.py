@@ -3,20 +3,17 @@ from django.shortcuts import render
 from store.models import Product
 from .models import Order, OrderItem, ShippingAddress
 from django.http import JsonResponse
+from .utils import cookie_cart, cart_data
 
 # Create your views here.
 
 
 def cart(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cart_count = order.get_order_items
-    else:
-        items = []
-        order = {'get_order_total': 0, 'get_order_items': 0}
-        cart_count = order['get_order_items']
+    data = cart_data(request)
+    items = data['items']
+    cart_count = data['cart_count']
+    order = data['order']
+
     context = {'items':items, 'order': order, 'cart_count': cart_count}
     return render(request, 'cart/cart.html', context)
 
@@ -46,8 +43,14 @@ def update_item(request):
 
 
 def checkout(request):
-    context = {}
-    return render('cart/cart.html', context)
+    data = cart_data(request)
+
+    items = data['items']
+    cart_count = data['cart_count']
+    order = data['order']
+
+    context = {'items':items, 'order': order, 'cart_count': cart_count}
+    return render(request, 'cart/checkout.html', context)
 
 '''
     def cart(request):
