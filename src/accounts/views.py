@@ -18,6 +18,7 @@ def register(request):
             if password == password2 and len(password) > 6:
                 user = Account.objects.create_user(first_name=first_name, last_name=last_name, email=email)
                 user.set_password(password)
+                user.is_active = True
                 user.save()
                 return HttpResponse('User hasa been created successfully')
             elif password != password2:
@@ -29,13 +30,3 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})   
 
 
-# def login_view(request):
-#     if request.
-#     email = request.POST.get('email')
-#     password = request.POST.get('password1')
-#     user = authenticate(request, email=email, password=password)
-#     if user is not None:
-#         login(request, user)
-#         return HttpResponse(f'{user.last_name}, you have logged in successfully')
-#     else:
-#         return HttpResponse('Invalid credentials')

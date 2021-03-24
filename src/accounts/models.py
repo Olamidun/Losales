@@ -59,4 +59,28 @@ class Customer(models.Model):
     email = models.CharField(max_length=200, null=True)
 
     def __str__(self):
+        if self.user:
+            return self.user.first_name
         return self.name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

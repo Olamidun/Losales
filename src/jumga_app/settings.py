@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import gettext
 import os
+from django.urls import reverse_lazy
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'ads',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +44,8 @@ INSTALLED_APPS = [
     # created apps
     'accounts.apps.AccountsConfig',
     'store.apps.StoreConfig',
-    'cart.apps.CartConfig'
+    'cart.apps.CartConfig',
+    'rest_framework'
 ]
 
 AUTH_USER_MODEL = 'accounts.Account'
@@ -136,4 +140,64 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-LOGIN_REDIRECT_URL = 'register'
+LOGIN_REDIRECT_URL = 'store:store-list'
+
+
+# DJANGO ADS STUFF
+
+ADS_GOOGLE_ADSENSE_CLIENT = None  # 'ca-pub-xxxxxxxxxxxxxxxx'
+_ = gettext.gettext
+ADS_ZONES = {
+    'header': {
+        'name': _('Header'),
+        'ad_size': {
+            'xs': '720x150',
+            'sm': '800x90',
+            'md': '800x90',
+            'lg': '800x90',
+            'xl': '800x90'
+        },
+        'google_adsense_slot': None,  # 'xxxxxxxxx',
+        'google_adsense_format': None,  # 'auto'
+    },
+    'content': {
+        'name': _('Content'),
+        'ad_size': {
+            'xs': '720x150',
+            'sm': '800x90',
+            'md': '800x90',
+            'lg': '800x90',
+            'xl': '800x90'
+        },
+        'google_adsense_slot': None,  # 'xxxxxxxxx',
+        'google_adsense_format': None,  # 'auto'
+    },
+    'sidebar': {
+        'name': _('Sidebar'),
+        'ad_size': {
+            'xs': '720x150',
+            'sm': '800x90',
+            'md': '800x90',
+            'lg': '800x90',
+            'xl': '800x90'
+        }
+    }
+}
+
+ADS_DEFAULT_AD_SIZE = '720x150'
+
+ADS_DEVICES = (
+    ('xs', _('Extra small devices')),
+    ('sm', _('Small devices')),
+    ('md', _('Medium devices (Tablets)')),
+    ('lg', _('Large devices (Desktops)')),
+    ('xl', _('Extra large devices (Large Desktops)')),
+)
+
+ADS_VIEWPORTS = {
+    'xs': 'd-block img-fluid d-sm-none',
+    'sm': 'd-none img-fluid d-sm-block d-md-none',
+    'md': 'd-none img-fluid d-md-block d-lg-none',
+    'lg': 'd-none img-fluid d-lg-block d-xl-none',
+    'xl': 'd-none img-fluid d-xl-block',
+}
