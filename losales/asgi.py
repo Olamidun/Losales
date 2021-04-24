@@ -1,5 +1,5 @@
 """
-ASGI config for jumga_app project.
+ASGI config for losales project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jumga_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'losales.settings')
 
 application = get_asgi_application()
