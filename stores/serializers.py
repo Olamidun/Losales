@@ -32,6 +32,13 @@ class CreateStoreSerializer(serializers.ModelSerializer):
 
 
 class ListStoreSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.update({
+            'number_of_items': instance.item_set.count()
+        })
+        return representation
     class Meta:
         model = Store
         fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created']
@@ -45,3 +52,5 @@ class ListStoreSerializer(serializers.ModelSerializer):
                 "read_only": True
             }
         }
+
+        

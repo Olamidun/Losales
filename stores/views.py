@@ -26,5 +26,15 @@ class ListStoresAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     def get_queryset(self):
+        print(self.kwargs)
         stores = Store.objects.filter(owner=self.request.user)
         return stores
+
+class StoreDetailsAPIView(generics.RetrieveAPIView):
+    serializer_class = ListStoreSerializer
+    # lookup_field = "slug"
+
+    def get_queryset(self):
+        store = Store.objects.filter(id=self.kwargs.get('pk'))
+        print(store)
+        return store
