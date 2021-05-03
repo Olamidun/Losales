@@ -1,0 +1,40 @@
+from .models import Store
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
+
+User = get_user_model()
+
+class CreateStoreSerializer(serializers.ModelSerializer):
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Store
+        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug']
+
+        extra_kwargs = {
+            "id":{
+                "read_only": True
+            }
+        }
+
+    def create(self, validated_data):
+        store = Store.objects.create(**validated_data)
+        return store
+
+    def update(self, instance, validated_data):
+        instance.description = validated_data.get('description', instance.description)
+        instance.twitter_handle = validated_data.get('twitter_handle', instance.twitter_handle)
+        instance.instagram_handle = validated_data.get('instagram_handle', instance.instagram_handle)
+        instance.save()
+        return instance
+
+
+class ListStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug']
+
+        extra_kwargs = {
+            "id":{
+                "read_only": True
+            }
+        }
