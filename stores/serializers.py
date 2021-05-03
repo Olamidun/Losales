@@ -8,10 +8,13 @@ class CreateStoreSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug']
+        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created']
 
         extra_kwargs = {
             "id":{
+                "read_only": True
+            },
+            'date_created':{
                 "read_only": True
             }
         }
@@ -31,10 +34,14 @@ class CreateStoreSerializer(serializers.ModelSerializer):
 class ListStoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug']
+        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created']
 
         extra_kwargs = {
             "id":{
+                "read_only": True
+            },
+
+            "date_created":{
                 "read_only": True
             }
         }

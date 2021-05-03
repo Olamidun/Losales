@@ -17,6 +17,7 @@ class CreateStoreAPIView(generics.CreateAPIView):
 class UpdateStoreAPIView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = CreateStoreSerializer
+    lookup_field = "slug"
     def get_queryset(self):
         return Store.objects.filter(owner=self.request.user) 
 
