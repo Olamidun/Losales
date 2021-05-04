@@ -32,9 +32,9 @@ class ListStoresAPIView(generics.ListAPIView):
 
 class StoreDetailsAPIView(generics.RetrieveAPIView):
     serializer_class = ListStoreSerializer
-    # lookup_field = "slug"
+    lookup_field = "slug"
 
     def get_queryset(self):
-        store = Store.objects.filter(id=self.kwargs.get('pk'))
+        store = Store.objects.filter(slug=self.kwargs.get('slug'))
         print(store)
         return store

@@ -8,7 +8,7 @@ from stores.models import Store
 class Item(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store')
     discounted_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
 
     def __str__(self):

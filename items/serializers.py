@@ -1,13 +1,23 @@
 from .models import Item
+from stores.models import Store
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 
 # User = get_user_model()
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    store = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    # def get_logged_in_user(self):
+    #     user = None
+    #     request = self.context.get("request")
+    #     if request and hasattr(request, "user"):
+    #         return request.user.id
+        # return None
+
+    store = serializers.PrimaryKeyRelatedField(queryset=Store.objects.all())
     class Meta:
+        
         model = Item
         fields = ['id', 'name', 'price', 'store', 'discounted_price', ]
 
@@ -16,7 +26,6 @@ class ItemSerializer(serializers.ModelSerializer):
                 "read_only": True
             }
         }
-
         def create(self, validated_data):
             item = Item.objects.create(**validated_data)
             return item

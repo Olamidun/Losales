@@ -4,5 +4,6 @@ from . import views
 app_name = 'items'
 
 urlpatterns = [
-    path('<int:pk>/create_item', views.CreateItemAPIView.as_view(), name="create-item"),
+    path('', views.CreateItemAPIView.as_view(), name="create-item"),
+    path('<int:pk>', views.EditItemAPIView.as_view())
 ]

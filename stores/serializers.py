@@ -24,6 +24,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         return store
 
     def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.twitter_handle = validated_data.get('twitter_handle', instance.twitter_handle)
         instance.instagram_handle = validated_data.get('instagram_handle', instance.instagram_handle)
@@ -35,9 +36,7 @@ class ListStoreSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation.update({
-            'number_of_items': instance.item_set.count()
-        })
+        representation['number_of_items'] = instance.item_set.count()
         return representation
     class Meta:
         model = Store
