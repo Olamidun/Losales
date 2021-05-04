@@ -26,13 +26,15 @@ class CreateItemAPIView(generics.ListCreateAPIView):
 class EditItemAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ItemSerializer
     permission_classes = (IsAuthenticated,)
+
+    # product = Item.objects.get(pk=2)
+    # print(product.store.id)
     # lookup_field = "slug"
 
     def get_queryset(self):
-        item = Item.objects.filter(pk=self.kwargs['pk'])
-
-        # print(item.store.name)
-        
+        store = Store.objects.get(slug=self.kwargs['slug'])
+        print(store.id)
+        item = Item.objects.filter(store=store)
         return item
         
         

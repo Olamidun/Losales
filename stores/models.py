@@ -15,4 +15,4 @@ class Store(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.owner.email}'s Store"
+        return self.name
