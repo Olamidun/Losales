@@ -5,5 +5,8 @@ app_name = 'items'
 
 urlpatterns = [
     path('', views.CreateItemAPIView.as_view(), name="create-item"),
-    path('<int:pk>', views.EditItemAPIView.as_view())
+    path('<int:pk>', views.EditItemAPIView.as_view()),
+    path('<int:pk>/add_images', views.CreateItemImageAPIView.as_view()),
+    path('<int:pk>/images', views.ListImageAPIView.as_view()),
+    # path('<int:pk>/image/<int:pk1>/', views.DeleteItemImageAPIView.as_view())
 ]

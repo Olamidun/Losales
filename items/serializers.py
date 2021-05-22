@@ -1,4 +1,4 @@
-from .models import Item
+from .models import Item, ItemImage
 from stores.models import Store
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
@@ -19,3 +19,20 @@ class ItemSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
             item = Item.objects.create(**validated_data)
             return item
+
+
+class ItemImageSerializer(serializers.ModelSerializer):
+    # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
+    class Meta:
+        model = ItemImage
+        fields = ['id', 'image', 'item']
+
+        extra_kwargs = {
+            "id":{
+                "read_only": True
+            }
+        }
+
+        def create(self, validated_data):
+            item_image = ItemImage.objects.create(**validated_data)
+            return item_image

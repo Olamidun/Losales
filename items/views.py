@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import generics
-from .serializers import ItemSerializer
-from .models import Item
+from .serializers import ItemSerializer, ItemImageSerializer
+from .models import Item, ItemImage
 from stores.models import Store
 
 # Create your views here.
@@ -28,5 +28,32 @@ class EditItemAPIView(generics.RetrieveUpdateDestroyAPIView):
         store = Store.objects.get(slug=self.kwargs['slug'])
         item = Item.objects.filter(store=store)
         return item
-        
-        
+
+
+class CreateItemImageAPIView(generics.CreateAPIView):
+    permission_classes= (IsAuthenticated, )
+    serializer_class = ItemImageSerializer
+
+    def perform_create(self, serializer):
+        item = Item.objects.get(pk=self.kwargs['pk'])
+        serializer.save(item=item)
+
+
+class ListImageAPIView(generics.ListAPIView):
+    serializer_class = ItemImageSerializer
+
+    def get_queryset(self):
+        item = Item.objects.get(pk=self.kwargs['pk'])
+        item_images = ItemImage.objects.filter(item=item)
+        return item_images
+
+
+# class DeleteItemImageAPIView(generics.RetrieveDestroyAPIView):
+#     permission_classes = (IsAuthenticated, )
+#     serializer_class = ItemImageSerializer
+
+
+#     def get_queryset(self):
+#         item = Item.objects.get(pk=self.kwargs['pk'])
+#         image = ItemImage.objects.filter(item=item)
+#         return image
