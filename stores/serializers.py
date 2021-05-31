@@ -1,4 +1,4 @@
-from .models import Store
+from .models import Store, ReviewStore
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -53,3 +53,17 @@ class ListStoreSerializer(serializers.ModelSerializer):
         }
 
         
+
+class ReviewStoreSerializer(serializers.ModelSerializer):
+    store = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = ReviewStore
+
+        fields = ['id', 'name', 'email', 'review', 'store', 'rating']
+
+        extra_kwargs = {
+            "id":{
+                "read_only": True
+            }
+        }

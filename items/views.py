@@ -47,7 +47,9 @@ class ListImageAPIView(generics.ListAPIView):
         item_images = ItemImage.objects.filter(item=item)
         return item_images
 
-
+'''
+Hasn't been properly done
+'''
 # class DeleteItemImageAPIView(generics.RetrieveDestroyAPIView):
 #     permission_classes = (IsAuthenticated, )
 #     serializer_class = ItemImageSerializer

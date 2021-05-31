@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import generics
-from .models import Store
-from .serializers import CreateStoreSerializer, ListStoreSerializer
+from .models import Store, ReviewStore
+from .serializers import CreateStoreSerializer, ListStoreSerializer, ReviewStoreSerializer
 
 # Create your views here.
 
@@ -38,3 +38,20 @@ class StoreDetailsAPIView(generics.RetrieveAPIView):
         store = Store.objects.filter(slug=self.kwargs.get('slug'))
         print(store)
         return store
+
+
+'''
+
+Store Review endpoints
+
+'''
+
+class CreateStoreReviewAPI(generics.ListCreateAPIView):
+    serializer_class = ReviewStoreSerializer
+
+    def get_queryset(self):
+        store = Store.objects.get(slug=self.kwargs['slug'])
+        return ReviewStore.objects.filter(store=store)
+    def perform_create(self, serializer):
+        store = Store.objects.get(slug=self.kwargs['slug'])
+        serializer.save(store=store)
