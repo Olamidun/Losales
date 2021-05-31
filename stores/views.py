@@ -55,3 +55,12 @@ class CreateStoreReviewAPI(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         store = Store.objects.get(slug=self.kwargs['slug'])
         serializer.save(store=store)
+
+class RetrieveReviewAPI(generics.RetrieveAPIView):
+    serializer_class = ReviewStoreSerializer
+
+    def get_queryset(self):
+        store = Store.objects.get(slug=self.kwargs.get('slug'))
+        return ReviewStore.objects.filter(store=store, pk=self.kwargs.get('pk'))
+
+
