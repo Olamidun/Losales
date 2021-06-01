@@ -1,6 +1,7 @@
 from .models import Store, ReviewStore
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from .services import create_subaccount
 
 User = get_user_model()
 
@@ -8,7 +9,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created']
+        fields = ['id', 'name', 'owner', 'description', 'bank_name',  'account_number', 'twitter_handle', 'instagram_handle', 'country', 'slug', 'date_created']
 
         extra_kwargs = {
             "id":{
@@ -20,7 +21,15 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        store = Store.objects.create(**validated_data)
+        bank_name = validated_data['bank_name']
+        account_number = str(validated_data['account_number'])
+        print(account_number)
+        response = create_subaccount(bank_name, f'0{account_number}')
+        print(response)
+        if response['result']['status'] == 'success':
+            store = Store.objects.create(**validated_data)
+        else:
+            return {"error": "Sorry, your store cannot be created at the moment, try again later"}
         return store
 
     def update(self, instance, validated_data):

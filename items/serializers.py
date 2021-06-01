@@ -7,7 +7,6 @@ from rest_framework import serializers
 class ItemSerializer(serializers.ModelSerializer):
     store = serializers.PrimaryKeyRelatedField(queryset=Store.objects.all())
     class Meta:
-        
         model = Item
         fields = ['id', 'name', 'price', 'store', 'discounted_price', ]
 
