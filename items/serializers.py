@@ -19,6 +19,22 @@ class ItemSerializer(serializers.ModelSerializer):
             item = Item.objects.create(**validated_data)
             return item
 
+class ListItemSerializer(serializers.ModelSerializer):
+    
+    def to_representation(self, instance):
+        representation =  super().to_representation(instance)
+        representation['images'] = ItemImageSerializer(ItemImage.objects.filter(item=instance), many=True).data
+        return representation
+
+    class Meta:
+        model = Item
+        fields = ['id', 'name', 'price', 'store', 'discounted_price', ]
+
+        extra_kwargs = {
+            "id":{
+                "read_only": True
+            }
+        }
 
 class ItemImageSerializer(serializers.ModelSerializer):
     # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())

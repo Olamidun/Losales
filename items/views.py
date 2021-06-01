@@ -2,23 +2,40 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import generics
-from .serializers import ItemSerializer, ItemImageSerializer
+from .serializers import ItemSerializer, ListItemSerializer, ItemImageSerializer
 from .models import Item, ItemImage
 from stores.models import Store
 
 # Create your views here.
 
 
-class CreateItemAPIView(generics.ListCreateAPIView):
+class CreateItemAPIView(generics.CreateAPIView):
     serializer_class = ItemSerializer
     permission_classes = (IsAuthenticated, )
+
+    # def get_queryset(self):
+    #     store = Store.objects.get(slug=self.kwargs['slug'])
+    #     return Item.objects.filter(store=store)
+    def perform_create(self, serializer):
+        store = Store.objects.get(slug=self.kwargs['slug'])
+        serializer.save(store=store)
+
+
+class ListItemAPIView(generics.ListAPIView):
+    serializer_class = ListItemSerializer
 
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
         return Item.objects.filter(store=store)
-    def perform_create(self, serializer):
+
+
+class RetrieveItemAPIView(generics.RetrieveAPIView):
+    serializer_class = ListItemSerializer
+    lookup_field = "pk"
+
+    def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
-        serializer.save(store=store)
+        return Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
 
 class EditItemAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ItemSerializer
@@ -26,7 +43,7 @@ class EditItemAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
-        item = Item.objects.filter(store=store)
+        item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
         return item
 
 

@@ -46,6 +46,7 @@ class ListStoreSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['number_of_items'] = instance.store.count()
+        representation['number_of_reviews'] = ReviewStore.objects.filter(store=instance).count()
         return representation
     class Meta:
         model = Store

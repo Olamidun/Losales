@@ -22,6 +22,7 @@ class UpdateStoreAPIView(generics.UpdateAPIView):
         return Store.objects.filter(owner=self.request.user) 
 
 
+# To be cached
 class ListStoresAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
@@ -30,6 +31,8 @@ class ListStoresAPIView(generics.ListAPIView):
         stores = Store.objects.filter(owner=self.request.user)
         return stores
 
+
+# To be cached
 class StoreDetailsAPIView(generics.RetrieveAPIView):
     serializer_class = ListStoreSerializer
     lookup_field = "slug"
@@ -49,6 +52,7 @@ Store Review endpoints
 class CreateStoreReviewAPI(generics.ListCreateAPIView):
     serializer_class = ReviewStoreSerializer
 
+    # To be cached
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
         return ReviewStore.objects.filter(store=store)
@@ -59,6 +63,7 @@ class CreateStoreReviewAPI(generics.ListCreateAPIView):
 class RetrieveReviewAPI(generics.RetrieveAPIView):
     serializer_class = ReviewStoreSerializer
 
+    # To be cached
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs.get('slug'))
         return ReviewStore.objects.filter(store=store, pk=self.kwargs.get('pk'))
