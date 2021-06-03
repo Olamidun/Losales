@@ -14,9 +14,12 @@ class Store(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     bank_name = models.CharField(max_length=100)
     account_number = models.BigIntegerField(default=0)
+    s_id = models.IntegerField(null=True, blank=True)
+    subaccount_id = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100)
     instagram_handle = models.CharField(max_length=50, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return self.name

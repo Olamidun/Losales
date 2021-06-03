@@ -1,7 +1,7 @@
 from .models import Store, ReviewStore
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .services import create_subaccount
+from .services import create_subaccount, BadRequestToFlutterwave
 
 User = get_user_model()
 
@@ -23,13 +23,17 @@ class CreateStoreSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         bank_name = validated_data['bank_name']
         account_number = str(validated_data['account_number'])
+        business_name = validated_data['name']
         print(account_number)
-        response = create_subaccount(bank_name, f'0{account_number}')
+        response = create_subaccount(bank_name, f'0{account_number}', business_name)
         print(response)
         if response['result']['status'] == 'success':
             store = Store.objects.create(**validated_data)
+            store.subaccount_id = response['result']['data']['subaccount_id']
+            store.s_id = response['result']['data']['id']
+            store.save()
         else:
-            return {"error": "Sorry, your store cannot be created at the moment, try again later"}
+            raise BadRequestToFlutterwave()
         return store
 
     def update(self, instance, validated_data):

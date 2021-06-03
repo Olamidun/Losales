@@ -37,7 +37,7 @@ class RetrieveItemAPIView(generics.RetrieveAPIView):
         store = Store.objects.get(slug=self.kwargs['slug'])
         return Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
 
-class EditItemAPIView(generics.RetrieveUpdateDestroyAPIView):
+class EditItemAPIView(generics.UpdateAPIView):
     serializer_class = ItemSerializer
     permission_classes = (IsAuthenticated,)
 
