@@ -54,7 +54,7 @@ class ListStoreSerializer(serializers.ModelSerializer):
         return representation
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created']
+        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created', 's_id', 'subaccount_id']
 
         extra_kwargs = {
             "id":{

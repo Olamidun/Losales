@@ -4,7 +4,7 @@ from .models import Item, ItemImage
 # Register your models here.
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'store', 'discounted_price']
+    list_display = ['id' ,'name', 'price', 'store', 'discounted_price']
 
 
 class ItemImageAdmin(admin.ModelAdmin):

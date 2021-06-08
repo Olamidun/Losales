@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # created apps
     'stores',
     'items',
+    'orders',
 
     # installed apps
     'rest_framework',
