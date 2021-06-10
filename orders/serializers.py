@@ -15,21 +15,6 @@ class CreateOrderSerializer(serializers.Serializer):
     # date_created = serializers.DateTimeField()
 
 
-
-    # class Meta:
-    #     model = Order
-
-    #     fields = ['id', 'store', 'total_cost', 'full_name', 'email', 'address']
-
-    #     extra_kwargs = {
-    #         "id":{
-    #             "read_only": True
-    #         },
-    #         "time_created": {
-    #             "read_only": True
-    #         }
-    #     }
-
     def create(self, validated_data):
         address = validated_data.get('address')
         email = validated_data.get('email')
@@ -72,24 +57,19 @@ class CreateOrderItemSerializer(serializers.Serializer):
 			quantity=quantity, total_cost=price
 		)
 
-    # order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
-    # items = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), many=True)
 
-    # class Meta:
-    #     model = OrderItem
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+        depth = 1
+ 
 
-    #     fields = ['id', 'items', 'order', 'quantity']
-
-    #     extra_kwargs = {
-    #         "id": {
-    #             "read_only": True
-    #         }
-    #     }
-
-    #     def create(self, validated_data):
-    #         order_item =  OrderItem.objects.create(**validated_data)
-    #         print(order_item)
-    #         return order_item
+class OrderItemListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+        depth = 1
 
 
 '''

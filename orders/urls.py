@@ -5,5 +5,8 @@ app_name = 'order'
 
 urlpatterns = [
     path('create_order', views.CreateOrderOnCheckoutAPIView.as_view()),
-    path('<int:pk>/create_orderitem/', views.CreateOrderItemAPIView.as_view())
+    path('orders', views.OrderAPIView.as_view()),
+    path('<int:pk>', views.OrderDetailsAPIView.as_view()),
+    path('<int:pk>/delete', views.DeleteOrderAPIView.as_view()),
+    path('<int:pk>/order_items', views.ListOrderItemAPIView.as_view())
 ]
