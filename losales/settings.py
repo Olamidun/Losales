@@ -102,8 +102,9 @@ DATABASES = {
 }
 
 
-
-
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'orders.exceptions.custom_exception_handler'
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

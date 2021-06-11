@@ -1,9 +1,11 @@
 from rest_framework import generics, status
-from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .exceptions import InvalidOrderIdForStore, InvalidOrderItemIdForOrder
 from .serializers import CreateOrderSerializer, OrderItemListSerializer, OrderSerializer
 from .models import Order, OrderItem
 from stores.models import Store
 from items.models import Item
+
 
 # Create your views here.
 
@@ -21,6 +23,7 @@ class CreateOrderOnCheckoutAPIView(generics.CreateAPIView):
 
 # To be cached
 class OrderAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = OrderSerializer
 
     def get_queryset(self):
@@ -37,6 +40,7 @@ class OrderDetailsAPIView(generics.RetrieveAPIView):
         return order
 
 class OrderDetailsAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = OrderSerializer
 
     def get_queryset(self):
@@ -45,6 +49,7 @@ class OrderDetailsAPIView(generics.RetrieveAPIView):
         return order
 
 class DeleteOrderAPIView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = OrderSerializer
 
     def get_queryset(self):
@@ -55,6 +60,7 @@ class DeleteOrderAPIView(generics.DestroyAPIView):
 
 
 class ListOrderItemAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = OrderItemListSerializer
 
     def get_queryset(self):
@@ -64,4 +70,29 @@ class ListOrderItemAPIView(generics.ListAPIView):
         if order.store == store:
             return order_item
         else:
-            print('Go fuck yourself')
+            raise InvalidOrderIdForStore()
+
+
+class OrderItemDetailAPIView(generics.RetrieveAPIView):
+    serializer_class = OrderItemListSerializer
+    permission_classes = (IsAuthenticated, )
+
+    lookup_field = "id"
+
+    def get_queryset(self):
+        store = Store.objects.get(slug=self.kwargs.get('slug'))
+        order = Order.objects.get(pk=self.kwargs.get('pk'))
+        if order.store == store:
+            
+            order_item = OrderItem.objects.filter(order=order, id=self.kwargs.get('id'))
+            print(order_item)
+            for items in order_item:
+                if order == items.order:
+                    return order_item
+                else:
+                    raise InvalidOrderItemIdForOrder()
+        else:
+            raise InvalidOrderIdForStore()
+
+
+        

@@ -16,7 +16,7 @@ class Order(models.Model):
     
 
     def __str__(self):
-        return f"{self.store.owner}'s Order for {self.full_name}"
+        return f"{self.store.name}'s Order for {self.full_name}"
 
 
 
