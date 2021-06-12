@@ -33,8 +33,7 @@ class CreateOrderSerializer(serializers.Serializer):
         order_item_serializer.is_valid(raise_exception=True)
         order_item_serializer.save(order_id=order.id)
 
-        order.total_cost = 5000
-        order.save()
+        order.calculate_total_cost()
         return order
 
 
@@ -51,7 +50,6 @@ class CreateOrderItemSerializer(serializers.Serializer):
         item = Item.objects.get(id=validated_data.get('item_id'))
         quantity = validated_data.get('quantity')
         price = float(quantity) * float(item.price)
-        # delivery_fee = 0.075 * price
         return OrderItem.objects.create(
 			items=item, order=order,
 			quantity=quantity, total_cost=price
@@ -78,14 +76,17 @@ class OrderItemListSerializer(serializers.ModelSerializer):
     "order_item": [
         {
             "item_id": 1,
-            "quantity":2,
-            "order_id":12
+            "quantity":2
         },
 
         {
             "item_id": 9,
-            "quantity":3,
-            "order_id":12
+            "quantity":3
+        },
+
+        {
+            "item_id": 7,
+            "quantity":5
         }
     ],
     "email": "kolapoolamidun@gmail.com",

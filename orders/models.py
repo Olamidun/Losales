@@ -13,6 +13,16 @@ class Order(models.Model):
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     address = models.TextField()
+
+
+    def calculate_total_cost(self):
+        order_items = OrderItem.objects.filter(order=self)
+        order_item_total = order_items.annotate(total_item_price=models.ExpressionWrapper(models.F('items__price') * models.F('quantity'), output_field=models.FloatField()))
+        order_total = order_item_total.aggregate(order_total=models.Sum('total_item_price'))['order_total']
+
+        self.total_cost = order_total
+        return self.save()
+        
     
 
     def __str__(self):
@@ -26,7 +36,6 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(default=0)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     total_cost = models.DecimalField(decimal_places=3, max_digits=12, default=0)
-
 
     
 
