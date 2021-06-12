@@ -17,10 +17,10 @@ class Order(models.Model):
 
     def calculate_total_cost(self):
         order_items = OrderItem.objects.filter(order=self)
-        order_item_total = order_items.annotate(total_item_price=models.ExpressionWrapper(models.F('items__price') * models.F('quantity'), output_field=models.FloatField()))
-        order_total = order_item_total.aggregate(order_total=models.Sum('total_item_price'))['order_total']
+        # order_item_total = order_items.annotate(total_item_price=models.ExpressionWrapper(models.F('items__price') * models.F('quantity'), output_field=models.FloatField()))
+        order_total = order_items.aggregate(order_total=models.Sum('total_cost'))
 
-        self.total_cost = order_total
+        self.total_cost = order_total['order_total']
         return self.save()
         
     
@@ -31,7 +31,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    # store = models.ForeignKey(Store, on_delete=models.CASCADE)
+
     items = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
