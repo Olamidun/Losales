@@ -4,9 +4,9 @@ import json
 def pay_with_flutterwave(amount, email, name, store_name, reference):
     base_url = 'https://api.flutterwave.com/v3/payments'
 
-    public_key = 'FLWPUBK_TEST-aaab004122d871bc5c7ea7ade0048fd9-X'
+    public_key = 'FLWPUBK_TEST-YYYYYYYYYYYYYYYYYYYY'
 
-    secret_key = 'FLWSECK_TEST-6780cf75dc1d85b632abee0f01420b9a-X'
+    secret_key = 'FLWSECK_TEST-XXXXXXXXXXXXXXXXXXX'
 
     # tx_ref = '123454'
 
