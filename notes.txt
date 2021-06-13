@@ -1,0 +1,5 @@
+######### THINGS TO DO BEFORE DEPLOYMENT ##########
+1 - Set up django debug toolbar to test the efficiency of select_related method
+2 - set up .env files for flutterwave and cloudinary credentials
+3 - Host images on cloudinary
+4 - Accept Store display pictures when store is being created.
