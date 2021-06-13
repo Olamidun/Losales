@@ -1,3 +1,5 @@
+import string
+import random
 from django.db import models
 from stores.models import Store
 from items.models import Item
@@ -13,6 +15,12 @@ class Order(models.Model):
     full_name = models.CharField(max_length=200)
     email = models.EmailField()
     address = models.TextField()
+    reference = models.CharField(max_length=200)
+
+    def assign_reference(self):
+        rand = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(16)])
+        self.reference = rand
+        return self.save()
 
 
     def calculate_total_cost(self):
@@ -38,14 +46,11 @@ class OrderItem(models.Model):
     total_cost = models.DecimalField(decimal_places=3, max_digits=12, default=0)
 
     
-
-
-class BillingAddress(models.Model):
-    name = models.CharField(max_length=200)
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=15)
-    address = models.TextField()
+class OrderPayment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    reference = models.CharField(max_length=200)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.reference
+

@@ -1,7 +1,10 @@
-from rest_framework import generics, status
+from rest_framework import generics, serializers
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .exceptions import InvalidOrderIdForStore, InvalidOrderItemIdForOrder
-from .serializers import CreateOrderSerializer, OrderItemListSerializer, OrderSerializer
+from .serializers import CreateOrderSerializer, OrderItemListSerializer, OrderSerializer, OrderPaymentSerializer
+from .payment import pay_with_flutterwave
 from .models import Order, OrderItem
 from stores.models import Store
 from items.models import Item
@@ -93,6 +96,23 @@ class OrderItemDetailAPIView(generics.RetrieveAPIView):
                     raise InvalidOrderItemIdForOrder()
         else:
             raise InvalidOrderIdForStore()
+
+class MakePayment(APIView):
+    def get(self, request, pk, slug):
+        store = Store.objects.get(slug=slug)
+        print(store)
+        
+        order = Order.objects.select_related('store').get(pk=pk)
+        print(order)
+        if order.store == store:
+            r = pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference)
+            serializer = OrderPaymentSerializer(order)
+            context = serializer.data
+            if r['response']['status'] == "success":
+                context['payment_info'] = r['response']
+                return Response({'data': context})
+
+
 
 
         

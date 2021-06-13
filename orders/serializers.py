@@ -1,6 +1,6 @@
 from stores.models import Store
 from items.models import Item
-from .models import BillingAddress, Order, OrderItem
+from .models import Order, OrderItem, OrderPayment
 from rest_framework import serializers
 
 
@@ -34,6 +34,7 @@ class CreateOrderSerializer(serializers.Serializer):
         order_item_serializer.save(order_id=order.id)
 
         order.calculate_total_cost()
+        order.assign_reference()
         return order
 
 
@@ -69,6 +70,12 @@ class OrderItemListSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+
+class OrderPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderPayment
+        fields = '__all__'
+        depth = 1
 
 '''
 {

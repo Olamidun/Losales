@@ -110,6 +110,7 @@ env.bak/
 venv.bak/
 jumga
 data
+env.txt
 
 # Spyder project settings
 .spyderproject
