@@ -6,7 +6,7 @@ def pay_with_flutterwave(amount, email, name, store_name, reference, subaccount_
 
     public_key = 'FLWPUBK_TEST-YYYYYYYYYYYYYYYYYYYY'
 
-    secret_key = 'FLWSECK_TEST-XXXXXXXXXXXXXX'
+    secret_key = 'FLWSECK_TEST-6780cf75dc1d85b632abee0f01420b9a-X'
 
     # tx_ref = '123454'
 
@@ -22,10 +22,10 @@ def pay_with_flutterwave(amount, email, name, store_name, reference, subaccount_
                 "phonenumber": "08103087162",
                 "name": name,
             },
-            "subaccount": [
+            "subaccounts": [
                 {
                     "id": "RS_E5C360F7CD43F1E2B33C0269C69A9219"
-                }
+                },
             ],
             "customizations":{
             "title":store_name,
@@ -39,7 +39,7 @@ def pay_with_flutterwave(amount, email, name, store_name, reference, subaccount_
 
 
 def confirm_payment(reference):
-    secret_key = 'FLWSECK_TEST-6780cf75dc1d85b632abee0f01420b9a-X'
+    secret_key = 'FLWSECK_TEST-XXXXXXXXXXXX'
 
     headers = {"Content-Type": 'application/json', 'Authorization': f"Bearer {secret_key}"}
 
