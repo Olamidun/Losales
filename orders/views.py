@@ -131,7 +131,7 @@ class ConfirmPayment(APIView):
             if r['response']['data']['tx_ref'] == reference and r['response']['status'] == "success" and r['response']['data']['charged_amount'] == order.total_cost:
                 order.paid = True
                 order.save()
-                context['payment_info'] = r['response']['data']
+                context['payment_info'] = {'status': r['response']['status'], 'message': r['response']['message']}
                 return Response({"data": context})
 
 
