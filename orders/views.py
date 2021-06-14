@@ -1,10 +1,11 @@
+import requests
 from rest_framework import generics, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .exceptions import InvalidOrderIdForStore, InvalidOrderItemIdForOrder
 from .serializers import CreateOrderSerializer, OrderItemListSerializer, OrderSerializer, OrderPaymentSerializer
-from .payment import pay_with_flutterwave
+from .payment import pay_with_flutterwave, confirm_payment
 from .models import Order, OrderItem
 from stores.models import Store
 from items.models import Item
@@ -105,12 +106,33 @@ class MakePayment(APIView):
         order = Order.objects.select_related('store').get(pk=pk)
         print(order)
         if order.store == store:
-            r = pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference)
+            r = pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id)
             serializer = OrderPaymentSerializer(order)
             context = serializer.data
             if r['response']['status'] == "success":
                 context['payment_info'] = r['response']
                 return Response({'data': context})
+
+
+class ConfirmPayment(APIView):
+    def get(self, request, pk, slug):
+        transaction_id = request.GET.get('transaction_id')
+        store = Store.objects.get(slug=slug)
+        print(store)
+        
+        order = Order.objects.select_related('store').get(pk=pk)
+        print(order)
+        if order.store == store:
+            reference = order.reference
+            r = confirm_payment(transaction_id)
+            print(r)
+            serializer = OrderPaymentSerializer(order)
+            context = serializer.data
+            if r['response']['data']['tx_ref'] == reference and r['response']['status'] == "success" and r['response']['data']['charged_amount'] == order.total_cost:
+                order.paid = True
+                order.save()
+                context['payment_info'] = r['response']['data']
+                return Response({"data": context})
 
 
 

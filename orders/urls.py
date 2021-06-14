@@ -10,5 +10,6 @@ urlpatterns = [
     path('<int:pk>/delete', views.DeleteOrderAPIView.as_view()),
     path('<int:pk>/order_items', views.ListOrderItemAPIView.as_view()),
     path('<int:pk>/order_items/<int:id>', views.OrderItemDetailAPIView.as_view()),
-    path('<int:pk>/make_payment', views.MakePayment.as_view())
+    path('<int:pk>/make_payment', views.MakePayment.as_view()),
+    path('<int:pk>/confirm_payment', views.ConfirmPayment.as_view())
 ]
