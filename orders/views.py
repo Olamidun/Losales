@@ -106,7 +106,7 @@ class MakePayment(APIView):
         order = Order.objects.select_related('store').get(pk=pk)
         print(order)
         if order.store == store:
-            r = pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id)
+            r = pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id, order.id)
             serializer = OrderPaymentSerializer(order)
             context = serializer.data
             if r['response']['status'] == "success":

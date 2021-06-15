@@ -3,11 +3,11 @@ import json
 from rest_framework.exceptions import APIException
 
 
-def create_subaccount(account_bank, account_number, business_name):
+def create_subaccount(account_bank, account_number, business_name, ):
     try:
         url = 'https://api.flutterwave.com/v3/subaccounts'
 
-        secret_key = 'FLWSECK_TEST-XXXXXXXXXX'
+        secret_key = 'FLWSECK_TEST-46e74a7eefbc0d82e0627d7f49d706c8-X'
 
         headers = {'Authorization': f"Bearer {secret_key}"}
 

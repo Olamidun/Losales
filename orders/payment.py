@@ -1,7 +1,7 @@
 import requests
 import json
 
-def pay_with_flutterwave(amount, email, name, store_name, reference, subaccount_id):
+def pay_with_flutterwave(amount, email, name, store_name, reference, subaccount_id, order_id):
     base_url = 'https://api.flutterwave.com/v3/payments'
 
     # public_key = 'FLWPUBK_TEST-YYYYYYYYYYYYYYYYYYYY'
@@ -15,7 +15,7 @@ def pay_with_flutterwave(amount, email, name, store_name, reference, subaccount_
     payload = {"tx_ref": reference,
             "amount": str(amount),
             "currency": "NGN",
-            "redirect_url": "http://localhost:8000/store/eternal-blue/orders/52/confirm_payment",
+            "redirect_url": f"http://localhost:8000/store/{store_name}/orders/{order_id}/confirm_payment",
             "payment_options": "card",
             "customer":{
                 "email": email,

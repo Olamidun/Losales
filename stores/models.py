@@ -10,6 +10,7 @@ class Store(models.Model):
     name = models.CharField(max_length=250)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
+    store_image = models.ImageField(upload_to="store_image", blank=True, null=True)
     twitter_handle = models.CharField(max_length=50, blank=True, null=True)
     slug = models.SlugField(max_length=200, unique=True)
     bank_name = models.CharField(max_length=100)

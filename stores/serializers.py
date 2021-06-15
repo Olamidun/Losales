@@ -9,7 +9,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'bank_name',  'account_number', 'twitter_handle', 'instagram_handle', 'country', 'slug', 'date_created']
+        fields = ['id', 'name', 'owner', 'description', 'store_image', 'bank_name',  'account_number', 'twitter_handle', 'instagram_handle', 'country', 'slug', 'date_created']
 
         extra_kwargs = {
             "id":{
@@ -54,7 +54,7 @@ class ListStoreSerializer(serializers.ModelSerializer):
         return representation
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'twitter_handle', 'instagram_handle', 'slug', 'date_created', 's_id', 'subaccount_id']
+        fields = ['id', 'name', 'owner', 'description', 'store_image', 'twitter_handle', 'instagram_handle', 'slug', 'date_created', 's_id', 'subaccount_id']
 
         extra_kwargs = {
             "id":{
