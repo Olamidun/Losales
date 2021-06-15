@@ -7,7 +7,7 @@ def create_subaccount(account_bank, account_number, business_name, ):
     try:
         url = 'https://api.flutterwave.com/v3/subaccounts'
 
-        secret_key = 'FLWSECK_TEST-46e74a7eefbc0d82e0627d7f49d706c8-X'
+        secret_key = 'FLWSECK_TEST-XXXXXXXXXX'
 
         headers = {'Authorization': f"Bearer {secret_key}"}
 
