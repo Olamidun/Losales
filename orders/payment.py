@@ -7,13 +7,11 @@ class Flutterwave:
 
 
     def __authentication_headers(self):
-        headers = {"Content-Type": 'application/json', 'Authorization': f"Bearer {self.secret_key}"}
+        headers = {"Content-Type": 'application/json', "Authorization": f"Bearer {self.secret_key}"}
         return headers
 
     def pay_with_flutterwave(self, amount, email, name, store_name, reference, subaccount_id, order_id):
         base_url = 'https://api.flutterwave.com/v3/payments'
-
-        secret_key = os.getenv('secret_key')
 
         # tx_ref = '123454'
 

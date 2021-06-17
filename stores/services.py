@@ -1,13 +1,18 @@
 import requests
 import json
 from rest_framework.exceptions import APIException
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def create_subaccount(account_bank, account_number, business_name, ):
+    
     try:
         url = 'https://api.flutterwave.com/v3/subaccounts'
 
-        secret_key = 'FLWSECK_TEST-XXXXXXXXXX'
+        secret_key = os.getenv('secret_key')
 
         headers = {'Authorization': f"Bearer {secret_key}"}
 
