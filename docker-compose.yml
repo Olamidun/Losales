@@ -1,5 +1,22 @@
 version: "3"
 services:
+    # Redis
+    redis:
+        image: redis:alpine
+        container_name: losales_redis
+
+    # Postgres db
+    db:
+        image: postgres
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=losalesdb
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        container_name: postgres_db 
+
+    # Django Application
     app:
         build: .
         volumes: 
@@ -11,12 +28,4 @@ services:
         command: python manage.py runserver 0.0.0.0:8000
         depends_on:
             - db
-    db:
-        image: postgres
-        volumes:
-            - ./data/db:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=losalesdb
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
-        container_name: postgres_db    
+   
