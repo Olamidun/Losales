@@ -1,18 +1,24 @@
 import requests
-from rest_framework import generics, serializers
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .exceptions import InvalidOrderIdForStore, InvalidOrderItemIdForOrder
 from .serializers import CreateOrderSerializer, OrderItemListSerializer, OrderSerializer, OrderPaymentSerializer
-from .payment import pay_with_flutterwave, confirm_payment
+from .payment import Flutterwave
 from .models import Order, OrderItem
 from stores.models import Store
 from items.models import Item
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 # Create your views here.
 
+
+flutterwave = Flutterwave(os.getenv('secret_key'))
 
 class CreateOrderOnCheckoutAPIView(generics.CreateAPIView):
     serializer_class = CreateOrderSerializer
@@ -106,7 +112,7 @@ class MakePayment(APIView):
         order = Order.objects.select_related('store').get(pk=pk)
         print(order)
         if order.store == store:
-            r = pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id, order.id)
+            r = flutterwave.pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id, order.id)
             serializer = OrderPaymentSerializer(order)
             context = serializer.data
             if r['response']['status'] == "success":
@@ -124,7 +130,7 @@ class ConfirmPayment(APIView):
         print(order)
         if order.store == store:
             reference = order.reference
-            r = confirm_payment(transaction_id)
+            r = flutterwave.confirm_payment(transaction_id)
             print(r)
             serializer = OrderPaymentSerializer(order)
             context = serializer.data
