@@ -1,14 +1,15 @@
-from .models import Item, ItemImage
+from .models import Item
 from stores.models import Store
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+import cloudinary.uploader
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    store = serializers.PrimaryKeyRelatedField(queryset=Store.objects.all())
+    store = serializers.PrimaryKeyRelatedField(queryset=Store.objects.all(), required=False)
     class Meta:
         model = Item
-        fields = ['id', 'name', 'price', 'store', 'discounted_price', ]
+        fields = ['id', 'name', 'item_image', 'price', 'store', 'discounted_price', 'out_of_stock']
 
         extra_kwargs = {
             "id":{
@@ -21,14 +22,14 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class ListItemSerializer(serializers.ModelSerializer):
     
-    def to_representation(self, instance):
-        representation =  super().to_representation(instance)
-        representation['images'] = ItemImageSerializer(ItemImage.objects.filter(item=instance), many=True).data
-        return representation
+    # def to_representation(self, instance):
+    #     representation =  super().to_representation(instance)
+    #     representation['images'] = ItemImageSerializer(ItemImage.objects.filter(item=instance), many=True).data
+    #     return representation
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'price', 'store', 'discounted_price', ]
+        fields = ['id', 'name', 'item_image', 'price', 'store', 'discounted_price', 'out_of_stock']
 
         extra_kwargs = {
             "id":{
@@ -36,18 +37,20 @@ class ListItemSerializer(serializers.ModelSerializer):
             }
         }
 
-class ItemImageSerializer(serializers.ModelSerializer):
-    # item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
-    class Meta:
-        model = ItemImage
-        fields = ['id', 'image', 'item']
+# class ItemImageSerializer(serializers.ModelSerializer):
+#     item = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), required=False)
+#     class Meta:
+#         model = ItemImage
+#         fields = ['id', 'image', 'item']
 
-        extra_kwargs = {
-            "id":{
-                "read_only": True
-            }
-        }
+#         extra_kwargs = {
+#             "id":{
+#                 "read_only": True
+#             }
+#         }
 
-        def create(self, validated_data):
-            item_image = ItemImage.objects.create(**validated_data)
-            return item_image
+#         def create(self, validated_data):
+#             image = validated_data['image']
+#             item_image = ItemImage.objects.create(**validated_data)
+#             return item_image
+#             print(upload_data)

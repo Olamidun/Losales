@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import generics
-from .serializers import ItemSerializer, ListItemSerializer, ItemImageSerializer
-from .models import Item, ItemImage
+from .serializers import ItemSerializer, ListItemSerializer
+from .models import Item
 from stores.models import Store
 
 # Create your views here.
@@ -47,22 +47,22 @@ class EditItemAPIView(generics.UpdateAPIView):
         return item
 
 
-class CreateItemImageAPIView(generics.CreateAPIView):
-    permission_classes= (IsAuthenticated, )
-    serializer_class = ItemImageSerializer
+# class CreateItemImageAPIView(generics.CreateAPIView):
+#     permission_classes= (IsAuthenticated, )
+#     serializer_class = ItemImageSerializer
 
-    def perform_create(self, serializer):
-        item = Item.objects.get(pk=self.kwargs['pk'])
-        serializer.save(item=item)
+#     def perform_create(self, serializer):
+#         item = Item.objects.get(pk=self.kwargs['pk'])
+#         serializer.save(item=item)
 
 
-class ListImageAPIView(generics.ListAPIView):
-    serializer_class = ItemImageSerializer
+# class ListImageAPIView(generics.ListAPIView):
+#     serializer_class = ItemImageSerializer
 
-    def get_queryset(self):
-        item = Item.objects.get(pk=self.kwargs['pk'])
-        item_images = ItemImage.objects.filter(item=item)
-        return item_images
+#     def get_queryset(self):
+#         item = Item.objects.get(pk=self.kwargs['pk'])
+#         item_images = ItemImage.objects.filter(item=item)
+#         return item_images
 
 '''
 Hasn't been properly done
