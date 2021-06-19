@@ -46,6 +46,15 @@ class EditItemAPIView(generics.UpdateAPIView):
         item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
         return item
 
+class DeleItemAPIView(generics.DestroyAPIView):
+    serializer_class = ItemSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        store = Store.objects.get(slug=self.kwargs['slug'])
+        item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
+        return item
+
 
 # class CreateItemImageAPIView(generics.CreateAPIView):
 #     permission_classes= (IsAuthenticated, )

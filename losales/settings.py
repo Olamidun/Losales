@@ -164,3 +164,13 @@ cloudinary.config(
     api_key=os.getenv('API_KEY'),
     api_secret= os.getenv('API_SECRET')
 )
+
+AWS_ACCESS_KEY_ID = os.getenv('AMAZON_ACCESS_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AMAZON_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = 'losales-media'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_REGION_NAME = 'eu-west-3'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
