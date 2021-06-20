@@ -1,11 +1,17 @@
+from django.http import request
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import generics
 from .models import Store, ReviewStore
 from .serializers import CreateStoreSerializer, ListStoreSerializer, ReviewStoreSerializer
+from django.core.cache import cache
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 # Create your views here.
+
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class CreateStoreAPIView(generics.CreateAPIView):
     serializer_class = CreateStoreSerializer
@@ -27,9 +33,15 @@ class ListStoresAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     def get_queryset(self):
-        print(self.kwargs)
-        stores = Store.objects.filter(owner=self.request.user)
-        return stores
+        # print(self.kwargs)
+        # if 'store' in cache:
+        #     stores = cache.get('store')
+        #     print(stores)
+        #     return stores
+        # else:
+            stores = Store.objects.filter(owner=self.request.user)
+            cache.set('store', stores, 30)
+            return stores
 
 
 # To be cached
@@ -38,9 +50,13 @@ class StoreDetailsAPIView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
     def get_queryset(self):
-        store = Store.objects.filter(slug=self.kwargs.get('slug'))
-        print(store)
-        return store
+        if 'store_detail' in cache:
+            store = cache.get('store_detail')
+        else:
+
+            store = Store.objects.filter(slug=self.kwargs.get('slug'))
+            cache.set('store_detail', store, 30)
+            return store
 
 
 '''
