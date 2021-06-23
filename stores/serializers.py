@@ -1,9 +1,14 @@
 from .models import Store, ReviewStore
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .services import create_subaccount, BadRequestToFlutterwave
+from .services import SubaccountClass, BadRequestToFlutterwave
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 User = get_user_model()
+subaccount = SubaccountClass(os.getenv('secret_key'))
 
 class CreateStoreSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -25,7 +30,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         account_number = str(validated_data['account_number'])
         business_name = validated_data['name']
         print(account_number)
-        response = create_subaccount(bank_name, f'0{account_number}', business_name)
+        response = subaccount.create_subaccount(bank_name, f'0{account_number}', business_name)
         print(response)
         if response['result']['status'] == 'success':
             store = Store.objects.create(**validated_data)
@@ -48,9 +53,11 @@ class CreateStoreSerializer(serializers.ModelSerializer):
 class ListStoreSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
+        subaccount_transaction = subaccount.fetch_subaccount(instance.s_id)
         representation = super().to_representation(instance)
         representation['number_of_items'] = instance.store.count()
         representation['number_of_reviews'] = ReviewStore.objects.filter(store=instance).count()
+        representation['subaccount_earnings'] = subaccount_transaction['data']
         return representation
     class Meta:
         model = Store

@@ -50,13 +50,13 @@ class StoreDetailsAPIView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
     def get_queryset(self):
-        if 'store_detail' in cache:
-            store = cache.get('store_detail')
-        else:
+        # if 'store_detail' in cache:
+        #     store = cache.get('store_detail')
+        # else:
 
-            store = Store.objects.filter(slug=self.kwargs.get('slug'))
-            cache.set('store_detail', store, 30)
-            return store
+        store = Store.objects.filter(slug=self.kwargs.get('slug'))
+        # cache.set('store_detail', store, 30)
+        return store
 
 
 '''
