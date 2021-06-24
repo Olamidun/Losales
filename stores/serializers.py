@@ -46,6 +46,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.twitter_handle = validated_data.get('twitter_handle', instance.twitter_handle)
         instance.instagram_handle = validated_data.get('instagram_handle', instance.instagram_handle)
+        subaccount.update_subaccount(instance.s_id, instance.name)
         instance.save()
         return instance
 
