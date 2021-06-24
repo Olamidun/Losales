@@ -14,7 +14,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Store
-        fields = ['id', 'name', 'owner', 'description', 'store_image', 'bank_name',  'account_number', 'twitter_handle', 'instagram_handle', 'country', 'slug', 'date_created']
+        fields = ['id', 'name', 'owner', 'description', 'store_image', 'bank_name',  'account_number', 'twitter_handle', 'instagram_handle', 'phone_number', 'country', 'slug', 'date_created']
 
         extra_kwargs = {
             "id":{
@@ -46,6 +46,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.twitter_handle = validated_data.get('twitter_handle', instance.twitter_handle)
         instance.instagram_handle = validated_data.get('instagram_handle', instance.instagram_handle)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         subaccount.update_subaccount(instance.s_id, instance.name)
         instance.save()
         return instance
@@ -54,7 +55,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
 class ListStoreSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
-        subaccount_transaction = subaccount.fetch_subaccount(instance.s_id)
+        subaccount_transaction = subaccount.fetch_settlement(instance.s_id)
         representation = super().to_representation(instance)
         representation['number_of_items'] = instance.store.count()
         representation['number_of_reviews'] = ReviewStore.objects.filter(store=instance).count()

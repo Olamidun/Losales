@@ -43,7 +43,7 @@ class SubaccountClass:
         return {'result': subaccount}
 
     # Corresponding endpoints to be tested
-    def update_subaccount(self, id, business_name, business_email, account_number):
+    def update_subaccount(self, id, business_name):
         url = f'https://api.flutterwave.com/v3/subaccounts/{id}'
         headers = self.__authentication_headers()
         payload = {
@@ -54,7 +54,7 @@ class SubaccountClass:
 
         
     # Corresponding endpoints to be tested
-    def fetch_subaccount(self, id):
+    def fetch_settlement(self, id):
         url = f"https://api.flutterwave.com/v3/settlements/{id}"
         headers = self.__authentication_headers()
 
@@ -63,13 +63,6 @@ class SubaccountClass:
         return {'subaccount': subaccount}
 
 
-    # Corresponding endpoints to be tested
-    def delete_subaccount(self, id):
-        url = f"https://api.flutterwave.com/v3/settlements/{id}"
-        headers = self.__authentication_headers()
-        result = requests.delete(url, headers=headers).json()
-        return {'result': result}
-        
 
 class BadRequestToFlutterwave(APIException):
     status_code = 400

@@ -25,7 +25,7 @@ class UpdateStoreAPIView(generics.UpdateAPIView):
     serializer_class = CreateStoreSerializer
     lookup_field = "slug"
     def get_queryset(self):
-        return Store.objects.filter(owner=self.request.user) 
+        return Store.objects.filter(owner=self.request.user)
 
 
 # To be cached
