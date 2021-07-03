@@ -10,7 +10,7 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store')
-    item_image = models.ImageField(upload_to="item_image")
+    item_image = models.ImageField(upload_to="item_image", blank=True, null=True)
     discounted_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     out_of_stock = models.BooleanField(default=False)
     def __str__(self):

@@ -33,7 +33,7 @@ class CreateOrderOnCheckoutAPIView(generics.CreateAPIView):
 
 # To be cached
 class OrderAPIView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
     serializer_class = OrderSerializer
 
     def get_queryset(self):

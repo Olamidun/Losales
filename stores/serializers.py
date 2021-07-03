@@ -55,11 +55,12 @@ class CreateStoreSerializer(serializers.ModelSerializer):
 class ListStoreSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
-        subaccount_transaction = subaccount.fetch_settlement(instance.s_id)
+        '''To put this in another serializer'''
+        # subaccount_transaction = subaccount.fetch_settlement(instance.s_id)
         representation = super().to_representation(instance)
         representation['number_of_items'] = instance.store.count()
         representation['number_of_reviews'] = ReviewStore.objects.filter(store=instance).count()
-        representation['subaccount_earnings'] = subaccount_transaction['data']
+        # representation['subaccount_earnings'] = subaccount_transaction
         return representation
     class Meta:
         model = Store
@@ -90,3 +91,4 @@ class ReviewStoreSerializer(serializers.ModelSerializer):
                 "read_only": True
             }
         }
+    

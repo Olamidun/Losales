@@ -30,6 +30,7 @@ class ListItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['id', 'name', 'item_image', 'price', 'store', 'discounted_price', 'out_of_stock']
+        depth = 1
 
         extra_kwargs = {
             "id":{

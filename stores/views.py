@@ -1,3 +1,4 @@
+import json
 from django.http import request
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
@@ -33,15 +34,19 @@ class ListStoresAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     def get_queryset(self):
+        print(cache)
         # print(self.kwargs)
-        # if 'store' in cache:
-        #     stores = cache.get('store')
-        #     print(stores)
-        #     return stores
-        # else:
+        stores = cache.get('store')
+        if stores is None:
             stores = Store.objects.filter(owner=self.request.user)
             cache.set('store', stores, 30)
             return stores
+        #     print(stores)
+        #     return stores
+        else:
+            return stores
+            
+        return stores
 
 
 # To be cached
@@ -50,19 +55,20 @@ class StoreDetailsAPIView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
     def get_queryset(self):
-        # if 'store_detail' in cache:
-        #     store = cache.get('store_detail')
-        # else:
-
-        store = Store.objects.filter(slug=self.kwargs.get('slug'))
-        # cache.set('store_detail', store, 30)
-        return store
+        store = cache.get('store_detail')
+        print(store)
+        if store is None:
+            store = Store.objects.filter(slug=self.kwargs.get('slug'))
+            cache.set('store_detail', store, 300)
+            return store
+        else:
+            # cache.set('store_detail', json.dumps(store), 30)
+            print(store)
+            return store
 
 
 '''
-
 Store Review endpoints
-
 '''
 
 class CreateStoreReviewAPI(generics.ListCreateAPIView):
@@ -75,6 +81,7 @@ class CreateStoreReviewAPI(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         store = Store.objects.get(slug=self.kwargs['slug'])
         serializer.save(store=store)
+        
 
 class RetrieveReviewAPI(generics.RetrieveAPIView):
     serializer_class = ReviewStoreSerializer

@@ -1,4 +1,5 @@
 import requests
+import redis
 import json
 from rest_framework.exceptions import APIException
 import os
