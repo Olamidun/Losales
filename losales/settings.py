@@ -54,14 +54,27 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.github',
     'dj_rest_auth.registration',
     'debug_toolbar',
 ]
 
 SITE_ID = 1
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+
+SOCIALACCOUNT_PROVIDER = {
+    'github': {
+        'scope': ('user:email', )
+    }
+}
 MIDDLEWARE = [
-    'losales.admin_middleware.RestrictStaffToAdminMiddleware',
+    # 'losales.admin_middleware.RestrictStaffToAdminMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

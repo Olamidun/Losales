@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework import generics
 from .models import Store, ReviewStore
-from .serializers import CreateStoreSerializer, ListStoreSerializer, ReviewStoreSerializer
+from .serializers import CreateStoreSerializer, ListStoreSerializer, ReviewStoreSerializer, StoreEarningsSerializer
 from django.core.cache import cache
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
@@ -34,7 +34,6 @@ class ListStoresAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     def get_queryset(self):
-        print(cache)
         # print(self.kwargs)
         stores = cache.get('store')
         if stores is None:
@@ -44,6 +43,7 @@ class ListStoresAPIView(generics.ListAPIView):
         #     print(stores)
         #     return stores
         else:
+            print(stores)
             return stores
             
         return stores
@@ -51,6 +51,7 @@ class ListStoresAPIView(generics.ListAPIView):
 
 # To be cached
 class StoreDetailsAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     lookup_field = "slug"
 
@@ -59,13 +60,19 @@ class StoreDetailsAPIView(generics.RetrieveAPIView):
         print(store)
         if store is None:
             store = Store.objects.filter(slug=self.kwargs.get('slug'))
-            cache.set('store_detail', store, 300)
+            cache.set('store_detail', store, 500)
             return store
         else:
             # cache.set('store_detail', json.dumps(store), 30)
             print(store)
             return store
 
+
+class StoreEarningsAPIView(generics.RetrieveAPIView):
+    serializer_class = StoreEarningsSerializer
+    lookup_field = "slug"
+    def get_queryset(self):
+       return Store.objects.filter(slug=self.kwargs.get('slug'))
 
 '''
 Store Review endpoints

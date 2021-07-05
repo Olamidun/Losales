@@ -8,6 +8,7 @@ urlpatterns = [
     path('edit_store/<str:slug>', views.UpdateStoreAPIView.as_view(), name="edit-store"),
     path('my_stores', views.ListStoresAPIView.as_view(), name="my-stores"),
     path('<str:slug>', views.StoreDetailsAPIView.as_view(), name="store-details"),
+    path('<str:slug>/earnings', views.StoreEarningsAPIView.as_view()),
     path('<str:slug>/review', views.CreateStoreReviewAPI.as_view()),
     path('<str:slug>/review/<int:pk>', views.RetrieveReviewAPI.as_view()),
     path('<str:slug>/items/', include('items.urls')),

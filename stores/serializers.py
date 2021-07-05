@@ -52,6 +52,16 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         return instance
 
 
+class StoreEarningsSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        earning = subaccount.fetch_settlement(instance.id)
+        print(earning)
+        representation =  super().to_representation(instance)
+        representation['store'] = instance.name
+        representation['slug'] = instance.slug
+        representation['earnings'] = earning
+        return representation
+
 class ListStoreSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):

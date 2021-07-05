@@ -19,13 +19,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from allauth.socialaccount.providers.github.views import oauth2_login
+from .views import GoogleLogin, GithubLogin, github_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('dj-rest-auth/facebook/', GoogleLogin.as_view(), name="fb_login"),
+    path('dj-rest-auth/github/', GithubLogin.as_view(), name="gh_login"),
+    path('dj-rest-auth/github/callback', github_callback, name='github_callback'),
+    path('dj-rest-auth/github/url', oauth2_login ),
     path('store/', include('stores.urls')),
     path('items/', include('items.urls')),
+
     path('__debug__/', include(debug_toolbar.urls)),
 ]
 
