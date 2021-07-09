@@ -5,6 +5,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter 
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from django.urls import reverse
+from django.http import HttpResponse
 
 from dj_rest_auth.registration.views import SocialLoginView
 
@@ -27,3 +28,7 @@ class GithubLogin(SocialLoginView):
     # def callback_url(self):
     #     return self.request.build_absolute_uri(reverse('github_callback'))
     # 0e8095933d35171bbc4d4a6b085c3c8341723923
+
+
+def empty_view(request):
+    return HttpResponse("")

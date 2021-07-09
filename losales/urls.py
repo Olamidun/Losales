@@ -20,13 +20,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from allauth.socialaccount.providers.github.views import oauth2_login
-from .views import GoogleLogin, GithubLogin, github_callback
+from .views import GoogleLogin, GithubLogin, github_callback, empty_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('dj-rest-auth/facebook/', GoogleLogin.as_view(), name="fb_login"),
+    path('password-reset/<uidb64>/<token>', empty_view, name='password_reset_confirm'),
     path('dj-rest-auth/github/', GithubLogin.as_view(), name="gh_login"),
     path('dj-rest-auth/github/callback', github_callback, name='github_callback'),
     path('dj-rest-auth/github/url', oauth2_login ),
