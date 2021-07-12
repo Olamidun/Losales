@@ -20,16 +20,17 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from allauth.socialaccount.providers.github.views import oauth2_login
-from .views import GoogleLogin, GithubLogin, github_callback, empty_view
+from dj_rest_auth.views import PasswordResetConfirmView
+from .views import GithubLogin, github_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('password-reset/<uidb64>/<token>', empty_view, name='password_reset_confirm'),
-    path('dj-rest-auth/github/', GithubLogin.as_view(), name="gh_login"),
-    path('dj-rest-auth/github/callback', github_callback, name='github_callback'),
-    path('dj-rest-auth/github/url', oauth2_login ),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('password/reset/confirm/<uidb64>/<token>', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('auth/github/', GithubLogin.as_view(), name="gh_login"),
+    path('auth/github/callback', github_callback, name='github_callback'),
+    path('auth/github/url', oauth2_login),
     path('store/', include('stores.urls')),
     path('items/', include('items.urls')),
 

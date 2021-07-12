@@ -1,10 +1,6 @@
 version: "3"
 services:
-    # Redis
-    redis:
-        image: redis:alpine
-        container_name: losales_redis
-
+    
     # Postgres db
     db:
         image: postgres

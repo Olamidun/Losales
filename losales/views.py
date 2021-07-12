@@ -16,11 +16,11 @@ class GoogleLogin(SocialLoginView):
 
 def github_callback(request):
     params = urllib.parse.urlencode(request.GET)
-    return redirect(f'https://localhost:800/store/drinks-and-liquor?{params}')
+    return redirect(f'https://localhost:800/store/my_stores?{params}')
 
 class GithubLogin(SocialLoginView):
     adapter_class = GitHubOAuth2Adapter
-    callback_url = 'http://localhost:8000/dj-rest-auth/github/callback'
+    callback_url = 'http://localhost:8000/auth/github/callback'
     client_class = OAuth2Client
 
 
@@ -28,7 +28,3 @@ class GithubLogin(SocialLoginView):
     # def callback_url(self):
     #     return self.request.build_absolute_uri(reverse('github_callback'))
     # 0e8095933d35171bbc4d4a6b085c3c8341723923
-
-
-def empty_view(request):
-    return HttpResponse("")
