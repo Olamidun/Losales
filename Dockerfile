@@ -12,6 +12,8 @@ RUN pip install -r requirements.txt
 
 ADD . .
 
+RUN python manage.py collectstatic --noinput
+
 # EXPOSE 8000
 
 # gunicorn config

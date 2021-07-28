@@ -32,3 +32,4 @@ s3transfer==0.4.2
 six==1.16.0
 sqlparse==0.4.1
 urllib3==1.26.4
+whitenoise==5.3.0

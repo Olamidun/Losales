@@ -86,6 +86,8 @@ class ListStoreSerializer(serializers.ModelSerializer):
             }
         }
 
+
+
         
 
 class ReviewStoreSerializer(serializers.ModelSerializer):

@@ -12,7 +12,7 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     total_cost = models.DecimalField(decimal_places=3, max_digits=12, default=0)
     time_created = models.DateTimeField(auto_now_add=True)
-    full_name = models.CharField(max_length=200)
+    full_name = models.CharField(max_length=250)
     email = models.EmailField()
     address = models.TextField()
     reference = models.CharField(max_length=200)
