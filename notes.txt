@@ -40,3 +40,7 @@ s3transfer==0.4.2
 six==1.16.0
 sqlparse==0.4.1
 urllib3==1.26.4
+
+
+
+RewriteCond %{HTTPS} !=on RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
