@@ -30,7 +30,7 @@ class CreateStoreSerializer(serializers.ModelSerializer):
         account_number = str(validated_data['account_number'])
         business_name = validated_data['name']
         print(account_number)
-        response = subaccount.create_subaccount(bank_name, f'0{account_number}', business_name)
+        response = subaccount.create_subaccount(bank_name, account_number, business_name)
         print(response)
         if response['result']['status'] == 'success':
             store = Store.objects.create(**validated_data)
