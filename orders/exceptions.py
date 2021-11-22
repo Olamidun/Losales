@@ -12,6 +12,12 @@ class InvalidOrderItemIdForOrder(APIException):
     status_code = 404
     default_detail = "The order items for this order cannot be found, please check order item id again"
     default_code = "error"
+
+
+class InvalidStoreOwner(APIException):
+    status_code = 401
+    default_detail = "You cannot perform this action for this store because you are not the owner of the store"
+    default_code = "error"
     
 
 def custom_exception_handler(exc, context):

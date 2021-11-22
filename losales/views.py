@@ -16,11 +16,11 @@ class GoogleLogin(SocialLoginView):
 
 def github_callback(request):
     params = urllib.parse.urlencode(request.GET)
-    return redirect(f'https://localhost:800/store/my_stores?{params}')
+    return redirect(f'https://losales.herokuapp.com/store/my_stores?{params}')
 
 class GithubLogin(SocialLoginView):
     adapter_class = GitHubOAuth2Adapter
-    callback_url = 'http://localhost:8000/auth/github/callback'
+    callback_url = 'https://losales.herokuapp.com/auth/github/callback'
     client_class = OAuth2Client
 
 

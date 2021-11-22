@@ -5,6 +5,7 @@ from rest_framework import generics
 from .serializers import ItemSerializer, ListItemSerializer
 from .models import Item
 from stores.models import Store
+from orders.exceptions import InvalidStoreOwner
 
 # Create your views here.
 
@@ -13,12 +14,13 @@ class CreateItemAPIView(generics.CreateAPIView):
     serializer_class = ItemSerializer
     permission_classes = (IsAuthenticated, )
 
-    # def get_queryset(self):
-    #     store = Store.objects.get(slug=self.kwargs['slug'])
-    #     return Item.objects.filter(store=store)
     def perform_create(self, serializer):
         store = Store.objects.get(slug=self.kwargs['slug'])
-        serializer.save(store=store)
+        if store.owner == self.request.user:
+            serializer.save(store=store)
+        
+        else:
+            raise InvalidStoreOwner()
 
 
 class ListItemAPIView(generics.ListAPIView):
@@ -43,8 +45,11 @@ class EditItemAPIView(generics.UpdateAPIView):
 
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
-        item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
-        return item
+        if store.owner == self.request.user:
+            item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
+            return item
+        else:
+            raise InvalidStoreOwner()
 
 class DeleItemAPIView(generics.DestroyAPIView):
     serializer_class = ItemSerializer
@@ -52,36 +57,9 @@ class DeleItemAPIView(generics.DestroyAPIView):
 
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
-        item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
-        return item
+        if store.owner == self.request.user:
 
-
-# class CreateItemImageAPIView(generics.CreateAPIView):
-#     permission_classes= (IsAuthenticated, )
-#     serializer_class = ItemImageSerializer
-
-#     def perform_create(self, serializer):
-#         item = Item.objects.get(pk=self.kwargs['pk'])
-#         serializer.save(item=item)
-
-
-# class ListImageAPIView(generics.ListAPIView):
-#     serializer_class = ItemImageSerializer
-
-#     def get_queryset(self):
-#         item = Item.objects.get(pk=self.kwargs['pk'])
-#         item_images = ItemImage.objects.filter(item=item)
-#         return item_images
-
-'''
-Hasn't been properly done
-'''
-# class DeleteItemImageAPIView(generics.RetrieveDestroyAPIView):
-#     permission_classes = (IsAuthenticated, )
-#     serializer_class = ItemImageSerializer
-
-
-#     def get_queryset(self):
-#         item = Item.objects.get(pk=self.kwargs['pk'])
-#         image = ItemImage.objects.filter(item=item)
-#         return image
+            item = Item.objects.filter(store=store, pk=self.kwargs.get('pk'))
+            return item
+        else: 
+            raise InvalidStoreOwner()

@@ -4,11 +4,11 @@ from .models import Order, OrderItem, OrderPayment
 # Register your models here.
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['store', 'total_cost', 'paid', 'time_created']
+    list_display = ['total_cost', 'paid', 'time_created']
 
 
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['items', 'quantity', 'order'] 
+    list_display = ['items', 'quantity', 'order', 'seller_commission',  'losales_commission'] 
 
 
 class OrderPaymentAdmin(admin.ModelAdmin):

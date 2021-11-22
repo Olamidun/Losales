@@ -6,13 +6,9 @@ from rest_framework.decorators import permission_classes
 from rest_framework import generics
 from .models import Store, ReviewStore
 from .serializers import CreateStoreSerializer, ListStoreSerializer, ReviewStoreSerializer, StoreEarningsSerializer
-from django.core.cache import cache
-from django.conf import settings
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 # Create your views here.
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class CreateStoreAPIView(generics.CreateAPIView):
     serializer_class = CreateStoreSerializer
@@ -34,38 +30,19 @@ class ListStoresAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     def get_queryset(self):
-        # print(self.kwargs)
-        stores = cache.get('store')
-        if stores is None:
-            stores = Store.objects.filter(owner=self.request.user)
-            cache.set('store', stores, 30)
-            return stores
-        #     print(stores)
-        #     return stores
-        else:
-            print(stores)
-            return stores
-            
+        stores = Store.objects.filter(owner=self.request.user)
         return stores
 
 
-# To be cached
+
 class StoreDetailsAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ListStoreSerializer
     lookup_field = "slug"
 
     def get_queryset(self):
-        store = cache.get('store_detail')
-        print(store)
-        if store is None:
-            store = Store.objects.filter(slug=self.kwargs.get('slug'))
-            cache.set('store_detail', store, 500)
-            return store
-        else:
-            # cache.set('store_detail', json.dumps(store), 30)
-            print(store)
-            return store
+        store = Store.objects.filter(slug=self.kwargs.get('slug'))
+        return store
 
 
 class StoreEarningsAPIView(generics.RetrieveAPIView):
@@ -80,8 +57,6 @@ Store Review endpoints
 
 class CreateStoreReviewAPI(generics.ListCreateAPIView):
     serializer_class = ReviewStoreSerializer
-
-    # To be cached
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs['slug'])
         return ReviewStore.objects.filter(store=store)
@@ -93,7 +68,6 @@ class CreateStoreReviewAPI(generics.ListCreateAPIView):
 class RetrieveReviewAPI(generics.RetrieveAPIView):
     serializer_class = ReviewStoreSerializer
 
-    # To be cached
     def get_queryset(self):
         store = Store.objects.get(slug=self.kwargs.get('slug'))
         return ReviewStore.objects.filter(store=store, pk=self.kwargs.get('pk'))

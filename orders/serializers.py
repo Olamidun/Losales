@@ -78,28 +78,54 @@ class OrderPaymentSerializer(serializers.ModelSerializer):
         depth = 1
 
 '''
-{
-    "store": 1,
-    "order_item": [
-        {
-            "item_id": 1,
-            "quantity":2
-        },
+[
+    {
+        "store": 1,
+        "order_item": [
+            {
+                "item_id": 1,
+                "quantity":2
+            },
 
-        {
-            "item_id": 9,
-            "quantity":3
-        },
+            {
+                "item_id": 9,
+                "quantity":3
+            },
 
-        {
-            "item_id": 7,
-            "quantity":5
-        }
-    ],
-    "email": "kolapoolamidun@gmail.com",
-    "full_name": "Kolapo Opeoluwa",
-    "address": "56, ODK street"
-}
+            {
+                "item_id": 7,
+                "quantity":5
+            }
+        ],
+        "email": "kolapoolamidun@gmail.com",
+        "full_name": "Kolapo Opeoluwa",
+        "address": "56, ODK street"
+    },
+    {
+        "store": 1,
+        "order_item": [
+            {
+                "item_id": 1,
+                "quantity":2
+            },
 
+            {
+                "item_id": 9,
+                "quantity":3
+            },
+
+            {
+                "item_id": 7,
+                "quantity":5
+            }
+        ],
+        "email": "kolapoolamidun@gmail.com",
+        "full_name": "Kolapo Opeoluwa",
+        "address": "56, ODK street"
+    }
+]
+
+
+subaccounts = [{"id": _items.store.subaccount_id, "transaction_charge_type": "flat", "transaction_charge":Service.calculate_commission(_)} for _ in order_item]
 
 '''
