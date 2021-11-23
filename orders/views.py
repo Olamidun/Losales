@@ -10,7 +10,6 @@ from .models import Order, OrderItem
 from stores.models import Store
 from items.models import Item
 import os
-from .order_payment_service import OrderPaymentService
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -27,9 +26,9 @@ class CreateOrderOnCheckoutAPIView(generics.CreateAPIView):
     def get_queryset(self):
         return Item.objects.all()
 
-    # def perform_create(self, serializer):
-    #     store = Store.objects.get(slug=self.kwargs['slug'])
-    #     serializer.save(store=store)
+    def perform_create(self, serializer):
+        store = Store.objects.get(slug=self.kwargs['slug'])
+        serializer.save(store=store)
 
 
 # To be cached
@@ -106,21 +105,18 @@ class OrderItemDetailAPIView(generics.RetrieveAPIView):
 
 class MakePayment(APIView):
     def get(self, request, pk, slug):
-        # store = Store.objects.get(slug=slug)
-        # print(store)
+        store = Store.objects.get(slug=slug)
+        print(store)
         
-        order = Order.objects.get(pk=pk)
-
-        subaccounts = [{"id": _.items.store.subaccount_id, "transaction_charge_type": "flat", "transaction_charge":OrderPaymentService.calculate_commission_for_each_item_in_order(_)} for _ in order.orderitem_set.all()]
-
-        print(subaccounts)
-        # if order.store == store:
-        #     r = flutterwave.pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id, order.id)
-        #     serializer = OrderPaymentSerializer(order)
-        #     context = serializer.data
-        #     if r['response']['status'] == "success":
-        #         context['payment_info'] = r['response']
-        #         return Response({'data': context})
+        order = Order.objects.select_related('store').get(pk=pk)
+        print(order)
+        if order.store == store:
+            r = flutterwave.pay_with_flutterwave(order.total_cost, order.email, order.full_name, order.store.name, order.reference, store.subaccount_id, order.id)
+            serializer = OrderPaymentSerializer(order)
+            context = serializer.data
+            if r['response']['status'] == "success":
+                context['payment_info'] = r['response']
+                return Response({'data': context})
 
 
 class ConfirmPayment(APIView):

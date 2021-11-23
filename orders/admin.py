@@ -4,7 +4,7 @@ from .models import Order, OrderItem, OrderPayment
 # Register your models here.
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['total_cost', 'paid', 'time_created']
+    list_display = ['total_cost', 'paid', 'time_created', 'store']
 
 
 class OrderItemAdmin(admin.ModelAdmin):

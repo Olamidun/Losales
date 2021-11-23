@@ -8,7 +8,7 @@ from items.models import Item
 
 
 class Order(models.Model):
-    # store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
     paid = models.BooleanField(default=False)
     total_cost = models.DecimalField(decimal_places=3, max_digits=12, default=0)
     time_created = models.DateTimeField(auto_now_add=True)
@@ -34,16 +34,16 @@ class Order(models.Model):
     
 
     def __str__(self):
-        return f"Order for {self.full_name}"
+        return f"{self.store.name}'s Order for {self.full_name}"
 
 
 
 class OrderItem(models.Model):
+    losales_commission = models.DecimalField(default=0, decimal_places=2, max_digits=12)
+    seller_commission = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     items = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    seller_commission = models.BigIntegerField(default=0)
-    losales_commission = models.BigIntegerField(default=0)
     total_cost = models.DecimalField(decimal_places=3, max_digits=12, default=0)
 
     

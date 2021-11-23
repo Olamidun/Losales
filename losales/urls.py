@@ -33,7 +33,6 @@ urlpatterns = [
     path('auth/github/url', oauth2_login),
     path('store/', include('stores.urls')),
     path('items/', include('items.urls')),
-    # path('orders/', include('orders.urls')),
 
     path('__debug__/', include(debug_toolbar.urls)),
 ]
